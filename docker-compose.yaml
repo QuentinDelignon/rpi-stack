@@ -1,0 +1,58 @@
+version: "3"
+services:
+  mangarr.db:
+    container_name: mangarr.db
+    image: mongo
+    hostname: mangarr.db
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - /home/qdeli/self-hosted/mangarr/db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+
+  mangarr.cache:
+    container_name: mangarr.cache
+    image: redis/redis-stack # This is using the redis-stack image, consider switching to the regular redis image
+    hostname: mangarr.cache
+    restart: always
+    ports:
+      - 6379:6379
+      - 8001:8001 # If you switch to the regular image, remove this port
+    environment:
+      REDIS_PASSWORD: admin
+
+  mangarr.flaresolverr:
+    container_name: mangarr.flaresolverr
+    image: flaresolverr/flaresolverr
+    hostname: mangarr.flaresolverr
+    restart: always
+    ports:
+      - 8191:8191
+
+  mangarr.stack:
+    container_name: mangarr.stack
+    image: tnrd/mangarr.stack:latest
+    hostname: mangarr.stack
+    ports:
+      - 6565:80
+      - 6566:443
+    volumes:
+      - /home/qdeli/self-hosted/media/manga:/mnt/comics
+    environment:
+      # Flarsolverr
+      - FLARESOLVERR__HOST=http://mangarr.flaresolverr:8191 # The host of the flaresolverr instance
+      # Mongo
+      - MONGO__HOST=mangarr.db # The host of the mongo instance
+      - MONGO__USERNAME=admin # The username of the mongo instance
+      - MONGO__PASSWORD=admin # The password of the mongo instance
+      # Redis
+      - REDIS__HOST=mangarr.cache # The host of the redis instance
+      - REDIS__PASSWORD=password # The password of the redis instance
+      # Seq - Optional
+      #- SEQ__HOST=http://your.seq.host.here
+      #- SEQ__KEY=your-seq-api-key
+      # Notifications - Optional
+      #- NOTIFICATIONS__DISCORD=discord-webhook-url-here
