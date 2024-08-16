@@ -1,12 +1,17 @@
 version: "3"
 services:
-  dozzle:
-    image: amir20/dozzle:latest
+  duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
     environment:
-      - DOZZLE_MODE=server
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - CLI_ARGS= #optional
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/qdeli/self-hosted/duplicati/config:/config
+      - /home/qdeli/self-hosted/duplicati/backups:/backups
+      - /home/qdeli/self-hosted:/source
     ports:
-      - 9999:8080
-    deploy:
-      mode: global
+      - 8200:8200
+    restart: unless-stopped

@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+    button {
+      padding: 15px 25px;
+      border: unset;
+      border-radius: 15px;
+      color: #212121;
+      z-index: 1;
+      background: #e8e8e8;
+      position: relative;
+      font-weight: 1000;
+      font-size: 17px;
+      -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+      box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+      transition: all 250ms;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0;
+      border-radius: 15px;
+      background-color: #F44D4D;
+      z-index: -1;
+      -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+      box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+      transition: all 250ms;
+    }
+
+    button:hover {
+      color: #e8e8e8;
+    }
+
+    button:hover::before {
+      width: 100%;
+    }
+  </style>
+  <body>
+    <div
+      style="background-color: #17153b"
+      class="flex h-full flex-col justify-center items-center"
+    >
+      <img
+        class="m-5"
+        style="width: 50%"
+        src="https://static-00.iconduck.com/assets.00/9-404-error-illustration-2048x908-vp03fkyu.png"
+      />
+      <h1 class="text-white text-3xl">The page you requested was not found</h1>
+      <button
+        onclick="location.href='https://home.qdeli.ovh'"
+        style="background-color: #988dff"
+        class="flex rounded-3xl p-3 mt-8 justify-center align-center"
+      >
+        <span class="material-symbols-outlined mr-2"> home </span>
+        <h1 style="margin-top: -3px" class="text-xl mr-2">Return Home</h1>
+      </button>
+    </div>
+  </body>
+</html>
