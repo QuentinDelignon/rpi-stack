@@ -125,6 +125,7 @@ services:
     image: ghcr.io/wg-easy/wg-easy
     restart: unless-stopped
     container_name: wireguard
+    network_mode: host
     volumes:
       - /home/qdeli/self-hosted/wireguard:/etc/wireguard
     ports:
