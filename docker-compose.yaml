@@ -1,4 +1,6 @@
 version: "3"
+volumes:
+  perfs-db:
 services:
   duplicati:
     image: lscr.io/linuxserver/duplicati:latest
@@ -68,3 +70,48 @@ services:
       - 9898:80
     volumes:
       - "/home/qdeli/self-hosted/gotify/data:/app/data"
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    restart: always
+    devices:
+        - "/dev/vchiq:/dev/vchiq"
+        - "/dev/vcio:/dev/vcio"
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/rootfs/sys:ro
+      - /proc:/rootfs/proc:ro
+      - /etc:/rootfs/etc:ro
+      - /home/qdeli/self-hosted/media/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /usr/bin/vcgencmd:/usr/bin/vcgencmd        
+      - /usr/lib/aarch64-linux-gnu/libvcos.so.0:/usr/lib/aarch64-linux-gnu/libvcos.so.0        
+      - /usr/lib/aarch64-linux-gnu/libvchiq_arm.so.0:/usr/lib/aarch64-linux-gnu/libvchiq_arm.so.0             
+    links:
+      - influxdb
+    ports:
+      - "8092:8092/udp"
+      - "8094:8094"
+      - "8125:8125/udp"
+
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    restart: always
+    volumes:
+      - /home/qdeli/self-hosted/media/influxdb/data:/var/lib/influxdb
+    ports:
+      - "8086:8086"
+
+  chronograf:
+    image: chronograf
+    container_name: chronograf
+    restart: always
+    environment:
+      INFLUXDB_URL: http://influxdb:8086
+    volumes:
+      - /home/qdeli/self-hosted/media/chronograf/data:/var/lib/chronograf
+    ports:
+      - "8888:8888"
+    links:
+      - influxdb
