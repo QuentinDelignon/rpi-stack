@@ -1,6 +1,7 @@
 version: "3"
 volumes:
   perfs-db:
+  wireguard-volume:
 services:
   duplicati:
     image: lscr.io/linuxserver/duplicati:latest
@@ -115,3 +116,23 @@ services:
       - "8888:8888"
     links:
       - influxdb
+  wireguard:
+    image: ghcr.io/wg-easy/wg-easy
+    restart: unless-stopped
+
+    volumes:
+      - wireguard-volume:/etc/wireguard
+    ports:
+      - 51820:51820/udp
+      - 51821:51821/tcp
+    environment:
+      - WG_HOST=vpn.qdeli.ovh
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv6.conf.all.forwarding=1
+      - net.ipv6.conf.eth0.proxy_ndp=1
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
