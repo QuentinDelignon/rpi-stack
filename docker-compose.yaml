@@ -1,7 +1,4 @@
 version: "3"
-volumes:
-  perfs-db:
-  wireguard-volume:
 services:
   duplicati:
     image: lscr.io/linuxserver/duplicati:latest
@@ -119,9 +116,9 @@ services:
   wireguard:
     image: ghcr.io/wg-easy/wg-easy
     restart: unless-stopped
-
+    container_name: wireguard
     volumes:
-      - wireguard-volume:/etc/wireguard
+      - /home/qdeli/self-hosted/wireguard:/etc/wireguard
     ports:
       - 51820:51820/udp
       - 51821:51821/tcp
@@ -136,3 +133,14 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    environment:
+      DOMAIN: "https://pwd.qdeli.ovh"  # required when using a reverse proxy; your domain; vaultwarden needs to know it's https to work properly with attachments
+      SIGNUPS_ALLOWED: "false" # Deactivate this with "false" after you have created your account so that no strangers can register
+    volumes:
+      - /home/qdeli/self-hosted/vaultwarden:/data # the path before the : can be changed
+    ports:
+      - 11001:80 # you can replace the 11001 with your preferred port
