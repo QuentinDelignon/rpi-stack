@@ -213,3 +213,69 @@ services:
       - /home/qdeli/self-hosted/homarr/data:/data
     ports:
       - '7575:7575'
+  readarr:
+    image: lscr.io/linuxserver/readarr:arm64v8-nightly
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - /home/qdeli/self-hosted/media/config:/config
+      - /home/qdeli/self-hosted/media/books:/books #optional
+      - /home/qdeli/self-hosted/downloads:/downloads #optional
+    ports:
+      - 8787:8787
+    restart: unless-stopped
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /path/to/prowlarr/data:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=9797
+      - TORRENTING_PORT=6881
+    volumes:
+      - /home/qdeli/self-hosted/media/qbittorrent/appdata:/config
+      - /home/qdeli/self-hosted/media/downloads:/downloads #optional
+    ports:
+      - 9797:9797
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+  nzbget:
+    image: lscr.io/linuxserver/nzbget:latest
+    container_name: nzbget
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /home/qdeli/self-hosted/media/nzbget/data:/config
+      - /home/qdeli/self-hosted/media/downloads:/downloads #optional
+    ports:
+      - 6789:6789
+  nginx-proxy:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - /home/qdeli/self-hosted/nginx/data:/data
+      - /home/qdeli/self-hosted/nginx/letsencrypt:/etc/letsencrypt
+      - /home/qdeli/self-hosted/nginx/snoppets:/snippets:ro
