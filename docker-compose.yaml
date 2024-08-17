@@ -60,3 +60,11 @@ services:
     ports:
       - "5000:5000" # Change the public port (the first 5000) if you have conflicts with other services
     restart: unless-stopped
+  gotify:
+    image: gotify/server-arm7
+    container_name: gotify
+    restart: unless-stopped
+    ports:
+      - 9898:80
+    volumes:
+      - "/home/qdeli/self-hosted/gotify/data:/app/data"
