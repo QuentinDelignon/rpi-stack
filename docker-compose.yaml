@@ -180,27 +180,8 @@ services:
       PAPERLESS_DBHOST: postgres-db
       PAPERLESS_DBUSER: qdeli
       PAPERLESS_DBPASS: 1997
-# The UID and GID of the user used to run paperless in the container. Set this
-# to your UID and GID on the host so that you have write access to the
-# consumption directory.
       USERMAP_UID: 1000
       USERMAP_GID: 1000
-# Additional languages to install for text recognition, separated by a
-# whitespace. Note that this is
-# different from PAPERLESS_OCR_LANGUAGE (default=eng), which defines the
-# language used for OCR.
-# The container installs English, German, Italian, Spanish and French by
-# default.
-# See https://packages.debian.org/search?keywords=tesseract-ocr-&searchon=names&suite=buster
-# for available languages.
-      #PAPERLESS_OCR_LANGUAGES: tur ces
-# Adjust this key if you plan to make paperless available publicly. It should
-# be a very long sequence of random characters. You don't need to remember it.
-      #PAPERLESS_SECRET_KEY: change-me
-# Use this variable to set a timezone for the Paperless Docker containers. If not specified, defaults to UTC.
-      #PAPERLESS_TIME_ZONE: America/Los_Angeles
-# The default language to use for OCR. Set this to the language most of your
-# documents are written in.
       PAPERLESS_OCR_LANGUAGE: fra
       DEBUG: true
       PAPERLESS_URL: "https://paperless.qdeli.ovh"
@@ -208,3 +189,27 @@ services:
       PAPERLESS_WEBSERVER_WORKERS: 1
       PAPERLESS_ENABLE_NLTK: false
       PAPERLESS_OCR_SKIP_ARCHIVE_FILE: with_text
+  adguard:
+    container_name: adguard
+    restart: unless-stopped
+    image: adguard/adguardhome
+    network_mode: host
+    volumes:
+      - /home/qdeli/self-hosted/adguard/work2:/opt/adguardhome/work
+      - /home/qdeli/self-hosted/adguard/conf2:/opt/adguardhome/conf
+    ports:
+      - 8889:80
+      - 53:53/udp
+      - 53:53/tcp
+      - 3000:3000
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - /home/qdeli/self-hosted/homarr/configs:/app/data/configs
+      - /home/qdeli/self-hosted/homarr/icons:/app/public/icons
+      - /home/qdeli/self-hosted/homarr/data:/data
+    ports:
+      - '7575:7575'
