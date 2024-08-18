@@ -220,27 +220,6 @@ services:
     ports:
       - 9696:9696
     restart: unless-stopped
-  qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - WEBUI_PORT=9797
-      - TORRENTING_PORT=6881
-    volumes:
-      - /home/qdeli/self-hosted/media/qbittorrent/appdata:/config
-      - /home/qdeli/self-hosted/media/downloads:/downloads #optional
-    ports:
-      - 9797:9797
-      - 6881:6881
-      - 6881:6881/udp
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-    restart: unless-stopped
   nzbget:
     image: lscr.io/linuxserver/nzbget:latest
     container_name: nzbget
