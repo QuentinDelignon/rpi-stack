@@ -249,14 +249,3 @@ services:
       - /home/qdeli/self-hosted/media/downloads:/downloads #optional
     ports:
       - 6789:6789
-  nginx-proxy:
-    image: 'jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
-    ports:
-      - '80:80'
-      - '81:81'
-      - '443:443'
-    volumes:
-      - /home/qdeli/self-hosted/nginx/data:/data
-      - /home/qdeli/self-hosted/nginx/letsencrypt:/etc/letsencrypt
-      - /home/qdeli/self-hosted/nginx/snoppets:/snippets:ro
