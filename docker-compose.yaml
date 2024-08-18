@@ -205,7 +205,7 @@ services:
       - /home/qdeli/self-hosted/media/books:/books #optional
       - /home/qdeli/self-hosted/downloads:/downloads #optional
     ports:
-      - 8787:8787
+      - 8787:9696
     restart: unless-stopped
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
