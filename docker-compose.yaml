@@ -236,6 +236,10 @@ services:
       - 9797:9797
       - 6881:6881
       - 6881:6881/udp
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
     restart: unless-stopped
   nzbget:
     image: lscr.io/linuxserver/nzbget:latest
