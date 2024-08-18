@@ -202,6 +202,7 @@ services:
       - TZ=Europe/Paris
     volumes:
       - /home/qdeli/self-hosted/media/config:/config
+      - /home/qdeli/self-hosted/media/mangas:/mangas
       - /home/qdeli/self-hosted/media/books:/books #optional
       - /home/qdeli/self-hosted/downloads:/downloads #optional
     ports:
