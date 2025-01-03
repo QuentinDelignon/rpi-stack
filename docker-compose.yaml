@@ -76,19 +76,11 @@ services:
       - 9898:80
     volumes:
       - "/home/qdeli/self-hosted/gotify/data:/app/data"
-  broker:
-    image: docker.io/library/redis:7
-    restart: unless-stopped
-    volumes:
-      - redisdata:/data
-    networks:
-      - paperless
 
   webserver:
+    container_name: paperless
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     restart: unless-stopped
-    depends_on:
-      - broker
     networks:
       - paperless
       - db-network
@@ -100,10 +92,10 @@ services:
       - /home/qdeli/self-hosted/paperless/export:/usr/src/paperless/export
       - /home/qdeli/self-hosted/paperless/consume:/usr/src/paperless/consume
     environment:
-      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_REDIS: redis://redis:6379
       PAPERLESS_DBHOST: postgres-db
-      PAPERLESS_DBUSER: qdeli
-      PAPERLESS_DBPASS: 1997
+      PAPERLESS_DBUSER: ${DB_USER}
+      PAPERLESS_DBPASS: ${DB_PASS}
       USERMAP_UID: 1000
       USERMAP_GID: 1000
       PAPERLESS_OCR_LANGUAGE: fra
@@ -164,16 +156,3 @@ services:
     ports:
       - 9696:9696
     restart: unless-stopped
-  nzbget:
-    image: lscr.io/linuxserver/nzbget:latest
-    container_name: nzbget
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-    volumes:
-      - /home/qdeli/self-hosted/media/nzbget/data:/config
-      - /home/qdeli/self-hosted/media/downloads:/downloads #optional
-    ports:
-      - 6789:6789
